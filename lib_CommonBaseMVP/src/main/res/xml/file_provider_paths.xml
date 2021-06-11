@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--debug : FileProvider.SimplePathStrategy.getUriForFile(), Failed to find configured root that contains-->
+    <!--修复没有获取外置存储卡读写权限时，FileProvider路径问题 详见 ： io.ganguo.library.mvp.Config.getDataPath()-->
+    <cache-path name="app_cache" path="." />
+    <!--修复没有获取外置存储卡读写权限时，FileProvider路径问题 详见 ： io.ganguo.library.mvp.Config.getDataPath()-->
+    <files-path name="app_file" path="." />
+    <!--代表外部存储区域的根目录下的文件 Environment.getExternalStorageDirectory()/目录  详见 ： io.ganguo.library.mvp.Config.getDataPath()-->
+    <external-path name="app_external" path="." />
+    <!--sdcard根路径，防止以上路径都没匹配到,FileProvider crash-->
+    <root-path name="android_files" path="."/>
+</paths>

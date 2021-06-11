@@ -1,0 +1,361 @@
+ext.deps = [:]
+
+def versions = [:]
+versions.android_gradle_plugin = '3.5.4'
+versions.kotlin = '1.3.50'
+versions.fabric = '1.31.0'
+versions.realm_version = '5.13.0'
+versions.google_play_service = '4.2.0'
+versions.bintray_release = "0.9.2"
+versions.dokka_android = "0.9.15"
+versions.constraint_layout = "1.1.3"
+versions.walle = "1.1.6"
+versions.glide = "4.9.0"
+versions.retrofit = "2.6.0"
+versions.retrofit_gson = "2.6.0"
+versions.retrofit_scalars = "2.6.0"
+versions.retrofit_rxjava2 = "2.6.0"
+versions.dagger2 = "2.19"
+versions.rx_java2 = "2.2.3"
+versions.rx_android = "2.1.0"
+versions.rxbinding_kotlin = "2.1.1"
+versions.rxCache = "1.8.3-2.x"
+versions.rxCache_gson = "0.0.4"
+
+versions.support_version = "28.0.0"
+versions.zxing = "3.3.0"
+versions.chuck = "1.1.0"
+versions.systembartint = "1.0.4"
+
+versions.okHttp = "3.12.0"
+versions.butterknife = "10.0.0"
+versions.multidex = "1.0.3"
+
+versions.eventBus = "3.1.1"
+versions.gson = "2.8.0"
+versions.aRouterRuntime = "1.5.0"
+versions.aRouterCompiler = "1.2.2"
+versions.lifecycle_version = "1.1.1"
+versions.autodispose = "1.2.0"
+
+versions.facebook = "5.0.1"
+
+ext.versions = versions
+
+def deps = [:]
+
+// use -ktx for Kotlin
+def archC = [:]
+archC.extensions = "android.arch.lifecycle:extensions:$versions.lifecycle_version"
+archC.viewModel = "android.arch.lifecycle:viewmodel:$versions.lifecycle_version"
+archC.liveData = "android.arch.lifecycle:livedata:$versions.lifecycle_version"
+archC.lifecycleRuntime = "android.arch.lifecycle:runtime:$versions.lifecycle_version"
+archC.lifecycleCompiler = "android.arch.lifecycle:compiler:$versions.lifecycle_version"
+// if using Java8, use the following instead of compiler
+archC.optionalJava8 = "android.arch.lifecycle:common-java8:$versions.lifecycle_version"
+// ReactiveStreams support for LiveData
+archC.liveDataReactive = "android.arch.lifecycle:reactivestreams:$versions.lifecycle_version"
+deps.archC = archC
+
+def archX = [:]
+archX.lifecycle_common = "androidx.lifecycle:lifecycle-common:2.0.0"
+archX.lifecycle_livedata = "androidx.lifecycle:lifecycle-livedata:2.0.0"
+archX.lifecycle_livedata_core = "androidx.lifecycle:lifecycle-livedata-core:2.0.0"
+archX.lifecycle_runtime = "androidx.lifecycle:lifecycle-runtime:2.0.0"
+archX.lifecycle_viewmodel = "androidx.lifecycle:lifecycle-viewmodel:2.0.0"
+deps.archX = archX
+
+def supportX = [:]
+supportX.annotations = "androidx.annotation:annotation:1.1.0"
+supportX.cardview = "androidx.cardview:cardview:1.0.0"
+supportX.design = "com.google.android.material:material:1.1.0"
+supportX.palette = "androidx.palette:palette:1.0.0"
+supportX.palette_ktx = "androidx.palette:palette-ktx:1.0.0"
+supportX.drawerlayout = "androidx.drawerlayout:drawerlayout:1.1.0-alpha03"
+supportX.recyclerView = "androidx.recyclerview:recyclerview:1.1.0"
+supportX.recyclerView_selection = "androidx.recyclerview:recyclerview-selection:1.1.0"
+supportX.appcompat = "androidx.appcompat:appcompat:1.1.0"
+supportX.constraintLayout = "androidx.constraintlayout:constraintlayout:1.1.3"
+supportX.viewpager = "androidx.viewpager:viewpager:1.0.0"
+supportX.viewpager2 = "androidx.viewpager2:viewpager2:1.0.0-alpha06"
+supportX.swiperefreshlayout = "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
+
+supportX.multidex = "androidx.multidex:multidex:2.0.1"
+supportX.multidex_instrumentation = "androidx.multidex:multidex-instrumentation:2.0.0"
+
+supportX.localbroadcastmanager = "androidx.localbroadcastmanager:localbroadcastmanager:1.0.0"
+supportX.drawerlayout = "androidx.drawerlayout:drawerlayout:1.1.0-alpha03"
+supportX.customview = "androidx.customview:customview:1.1.0"
+
+// legacy
+supportX.legacy_v4 = "androidx.legacy:legacy-support-v4:1.0.0"
+supportX.legacy_core_ui = "androidx.legacy:legacy-support-core-ui:1.0.0"
+supportX.legacy_core_utils = "androidx.legacy:legacy-support-core-utils:1.0.0"
+supportX.legacy_v13 = "androidx.legacy:legacy-support-v13:1.0.0"
+supportX.legacy_preference_v14 = "androidx.legacy:legacy-preference-v14:1.0.0"
+
+supportX.core_ktx = "androidx.core:core-ktx:1.1.0"
+supportX.core = "androidx.core:core:1.1.0"
+
+supportX.fragment_runtime = "androidx.fragment:fragment:1.1.0"
+supportX.fragment_runtime_ktx = "androidx.fragment:fragment-ktx:1.1.0"
+deps.supportX = supportX
+
+def support = [:]
+support.annotations = "com.android.support:support-annotations:$versions.support_version"
+support.cardview = "com.android.support:cardview-v7:$versions.support_version"
+support.design = "com.android.support:design:$versions.support_version"
+support.recyclerView = "com.android.support:recyclerview-v7:$versions.support_version"
+support.v4 = "com.android.support:support-v4:$versions.support_version"
+support.appcompat = "com.android.support:appcompat-v7:$versions.support_version"
+support.constraintLayout = "com.android.support.constraint:constraint-layout:1.1.3"
+support.multidex = "com.android.support:multidex:$versions.multidex"
+deps.support = support
+
+def firebase = [:]
+//远程配置
+//firebase.config = "com.google.firebase:firebase-config:16.5.0"
+//Analytics
+firebase.core = "com.google.firebase:firebase-core:16.0.8"
+//App Indexing
+//firebase.appindexing = "com.google.firebase:firebase-appindexing:17.1.0"
+//云消息传递
+firebase.messaging = "com.google.firebase:firebase-messaging:17.6.0"
+deps.firebase = firebase
+
+def playServices = [:]
+//Google Analytics
+playServices.analytics = "com.google.android.gms:play-services-analytics:17.0.0"
+//Google Account Login
+playServices.auth = "com.google.android.gms:play-services-auth:17.0.0"
+deps.playServices = playServices
+
+def retrofit = [:]
+retrofit.runtime = "com.squareup.retrofit2:retrofit:$versions.retrofit"
+retrofit.gson = "com.squareup.retrofit2:converter-gson:$versions.retrofit_gson"
+retrofit.mock = "com.squareup.retrofit2:retrofit-mock:$versions.retrofit"
+retrofit.scalars = "com.squareup.retrofit2:converter-scalars:$versions.retrofit_scalars"
+retrofit.rxjava2 = "com.squareup.retrofit2:adapter-rxjava2:$versions.retrofit_rxjava2"
+deps.retrofit = retrofit
+
+def kotlin = [:]
+kotlin.stdlib = "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$versions.kotlin"
+kotlin.reflect = "org.jetbrains.kotlin:kotlin-reflect:$versions.kotlin"
+kotlin.plugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:$versions.kotlin"
+deps.kotlin = kotlin
+
+def glide = [:]
+glide.runtime = "com.github.bumptech.glide:glide:$versions.glide"
+glide.compiler = "com.github.bumptech.glide:compiler:$versions.glide"
+deps.glide = glide
+
+def autodispose = [:]
+autodispose.runtime = "com.uber.autodispose:autodispose:$versions.autodispose"
+autodispose.archcomponents = "com.uber.autodispose:autodispose-android-archcomponents:$versions.autodispose"
+deps.autodispose = autodispose
+
+def butterknife = [:]
+butterknife.runtime = "com.jakewharton:butterknife:$versions.butterknife"
+butterknife.compiler = "com.jakewharton:butterknife-compiler:$versions.butterknife"
+deps.butterknife = butterknife
+
+def umeng = [:]
+umeng.analytics = "com.umeng.umsdk:analytics:8.1.3"
+umeng.common = "com.umeng.umsdk:common:2.1.0"
+deps.umeng = umeng
+
+def realm = [:]
+realm.plugin = "io.realm:realm-gradle-plugin:$versions.realm_version"
+realm.annotations = "io.realm:realm-annotations:$versions.realm_version"
+realm.android_library = "io.realm:realm-android-library:$versions.realm_version"
+realm.android_kotlin_extensions = "io.realm:realm-android-kotlin-extensions:$versions.realm_version"
+realm.compiler = "io.realm:realm-annotations-processor:$versions.realm_version"
+deps.realm = realm
+
+deps.android_gradle_plugin = "com.android.tools.build:gradle:$versions.android_gradle_plugin"
+deps.bintray_release = "com.novoda:bintray-release:$versions.bintray_release"
+deps.dokka_android_plugin = "org.jetbrains.dokka:dokka-android-gradle-plugin:$versions.dokka_android"
+deps.fabric = "io.fabric.tools:gradle:$versions.fabric"
+deps.google_play_service = "com.google.gms:google-services:$versions.google_play_service"
+deps.walle = "com.meituan.android.walle:plugin:$versions.walle"
+
+deps.rxjava2 = "io.reactivex.rxjava2:rxjava:$versions.rx_java2"
+deps.rx_android = "io.reactivex.rxjava2:rxandroid:$versions.rx_android"
+deps.rx_kotlin = "io.reactivex.rxjava2:rxkotlin:2.2.0"
+
+def rxBinding = [:]
+rxBinding.runtime = "com.jakewharton.rxbinding2:rxbinding-kotlin:$versions.rxbinding_kotlin"
+rxBinding.v4 = "com.jakewharton.rxbinding2:rxbinding-support-v4:$versions.rxbinding_kotlin"
+rxBinding.v7 = "com.jakewharton.rxbinding2:rxbinding-appcompat-v7:$versions.rxbinding_kotlin"
+rxBinding.design = "com.jakewharton.rxbinding2:rxbinding-design:$versions.rxbinding_kotlin"
+rxBinding.recyclerView = "com.jakewharton.rxbinding2:rxbinding-recyclerview-v7:$versions.rxbinding_kotlin"
+deps.rxBinding = rxBinding
+
+def rxCache = [:]
+rxCache.runtime = "com.github.VictorAlbertos.RxCache:runtime:$versions.rxCache"
+rxCache.gson = "com.github.VictorAlbertos.Jolyglot:gson:$versions.rxCache_gson"
+deps.rxCache = rxCache
+
+def dagger2 = [:]
+dagger2.runtime = "com.google.dagger:dagger:$versions.dagger2"
+dagger2.android = "com.google.dagger:dagger-android:$versions.dagger2"
+dagger2.android_support = "com.google.dagger:dagger-android-support:$versions.dagger2"
+dagger2.compiler = "com.google.dagger:dagger-compiler:$versions.dagger2"
+dagger2.android_processor = "com.google.dagger:dagger-android-processor:$versions.dagger2"
+deps.dagger2 = dagger2
+
+def zxing = [:]
+zxing.core = "com.google.zxing:core:$versions.zxing"
+zxing.android = "com.google.zxing:android-integration:$versions.zxing"
+deps.zxing = zxing
+
+def xgPush = [:]
+xgPush.xinge = "com.tencent.xinge:xinge:4.3.5-release"
+xgPush.wup = "com.tencent.wup:wup:1.0.0.E-Release"
+xgPush.jg = "com.tencent.jg:jg:1.1"
+xgPush.mid = "com.tencent.mid:mid:4.0.7-Release"
+
+xgPush.xiaomi = "com.tencent.xinge:mipush:4.3.2-xiaomi-release"
+xgPush.huawei = "com.tencent.xinge:xghw:4.3.2-huawei-release"
+xgPush.meizu = "com.tencent.xinge:xgmz:4.3.2-meizu-release"
+deps.xgPush = xgPush
+
+deps.dToast = "com.github.Dovar66:DToast:1.1.5"
+deps.chuck = "com.readystatesoftware.chuck:library:$versions.chuck"
+
+deps.facebook = "com.facebook.android:facebook-android-sdk:$versions.facebook"
+deps.facebook_login = "com.facebook.android:facebook-login:$versions.facebook"
+deps.facebook_share = "com.facebook.android:facebook-share:$versions.facebook"
+
+deps.okHttp = "com.squareup.okhttp3:okhttp:$versions.okHttp"
+deps.systembartint = "com.readystatesoftware.systembartint:systembartint:$versions.systembartint"
+deps.gson = "com.google.code.gson:gson:$versions.gson"
+
+deps.switchButton = "com.kyleduo.switchbutton:library:2.0.0"
+deps.jsoup = "org.jsoup:jsoup:1.8.2"
+deps.photoView = "com.github.chrisbanes:PhotoView:1.3.0"
+deps.boltsAndroid = "com.parse.bolts:bolts-android:1.4.0"
+deps.boltsAppLinks = "com.parse.bolts:bolts-applinks:1.4.0"
+deps.boltsTasks = "com.parse.bolts:bolts-taks:1.4.0"
+deps.calligraphy = "io.github.inflationx:calligraphy3:3.1.1"
+deps.viewpump = "io.github.inflationx:viewpump:2.0.3"
+deps.twitter = "com.twitter.sdk.android:twitter-core:2.0.0@aar"
+deps.crashlytics = "com.crashlytics.sdk.android:crashlytics:2.10.1"
+deps.circleIndicator = "me.relex:circleindicator:1.2.2@aar"
+deps.pdfViewer = "com.github.barteksc:android-pdf-viewer:3.1.0-beta.1"
+deps.circleButton = "com.github.markushi:circlebutton:1.1"
+deps.bottomSheet = "com.github.Kennyc1012:BottomSheet:2.3.4"
+deps.errorCrash = "cat.ereza:customactivityoncrash:1.2.0"
+deps.flowLayout = "com.zhy:flowlayout-lib:1.0.3"
+deps.highLight = "com.isanwenyu.highlight:highlight:1.8.0"
+deps.quicksidebar = "com.bigkoo:quicksidebar:1.0.3"
+deps.stickyheadersrecyclerview = "com.timehop.stickyheadersrecyclerview:library:0.4.3@aar"
+deps.floatWindow = "com.github.yhaolpz:FloatWindow:1.0.9"
+deps.kLog = "com.github.zhaokaiqiang.klog:library:1.6.0"
+deps.leakcanary = "com.squareup.leakcanary:leakcanary-android:1.5"
+deps.retrofitUrlManager = "me.jessyan:retrofit-url-manager:1.4.0"
+deps.progressManager = "me.jessyan:progressmanager:1.5.0"
+deps.lifecycleModel = "me.jessyan:lifecyclemodel:1.0.1"
+deps.lottie = "com.airbnb.android:lottie:3.0.6"
+deps.flexbox = "com.google.android:flexbox:1.0.0"
+// 浮窗控件
+deps.floatWindow = "com.github.princekin-f:EasyFloat:1.3.1"
+deps.basePop = "com.github.razerdp:BasePopup:2.2.2.2"
+
+//junit
+deps.junit = "junit:junit:4.12"
+//mock
+deps.mockito_kotlin = "com.nhaarman:mockito-kotlin-kt1.1:1.5.0"
+//robolectric
+deps.robolectric = "org.robolectric:robolectric:3.3.2"
+deps.robolectric_v4 = "org.robolectric:shadows-support-v4:3.3.2"
+//espresso
+deps.espresso_core = "androidx.test.espresso:espresso-core:3.1.0"
+deps.espresso_contrib = "androidx.test.espresso:espresso-contrib:3.1.0"
+deps.espresso_idling_resource = "androidx.test.espresso:espresso-idling-resource:3.1.0"
+deps.espresso_intent = "androidx.test.espresso:espresso-intents:3.1.0"
+deps.test_runner = "androidx.test:runner:1.1.0-alpha3"
+deps.test_rules = "androidx.test:rules:1.1.0-alpha3"
+
+def rximagepicker = [:]
+rximagepicker.core = "io.library.android:rximagepicker:2.5.2"
+rximagepicker.support = "io.library.android:rximagepicker-support:2.5.2"
+rximagepicker.support_wechat = "io.library.android:rximagepicker-support-wechat:2.5.2"
+deps.rximagepicker = rximagepicker
+
+def doraemonkit = [:]
+doraemonkit.debug = "com.didichuxing.doraemonkit:doraemonkit:2.2.1"
+doraemonkit.release = "com.didichuxing.doraemonkit:doraemonkit-no-op:2.2.1"
+deps.doraemonkit = doraemonkit
+
+def appsFlyer = [:]
+appsFlyer.install_referrer = "com.android.installreferrer:installreferrer:1.0"
+appsFlyer.android = "com.appsflyer:af-android-sdk:4.9.0"
+deps.appsFlyer = appsFlyer
+
+def eventBus = [:]
+eventBus.runtime = "org.greenrobot:eventbus:$versions.eventBus"
+eventBus.compiler = "org.greenrobot:eventbus-annotation-processor:$versions.eventBus"
+deps.eventBus = eventBus
+
+def aRouter = [:]
+aRouter.runtime = "com.alibaba:arouter-api:$versions.aRouterRuntime"
+aRouter.compiler = "com.alibaba:arouter-compiler:$versions.aRouterCompiler"
+deps.aRouter = aRouter
+
+def fastLib = [:]
+fastLib.common_base_mvp = "io.library.android:common-base-mvp:1.2.3"
+
+fastLib.android_pay = "io.library.android:android-pay:2.1.0"
+fastLib.location_baidu = "io.library.android:location-baidu:2.0.0"
+fastLib.location_gaode = "io.library.android:location-baidu:2.0.0"
+fastLib.location_system = "io.library.android:location-system:2.0.0"
+
+fastLib.pull_to_refresh = "io.library.android:pull-to-refresh:3.0.1"
+fastLib.smart_rv_adapter = "io.library.android:smart-rv-adapter:3.1.8"
+fastLib.network_listen = "io.library.android:net-listen:3.0.5"
+fastLib.image_crop = "io.library.android:android-crop:3.0.4"
+fastLib.bottombar = "io.library.android:bottom-bar:3.1.1"
+fastLib.viewpager_indicator = "io.library.android:viewpager-indicator:3.0.0"
+fastLib.ui_sneaker = "io.library.android:ui-sneaker:3.0.6"
+fastLib.ui_slideuplayout = "io.library.android:ui-slideuplayout:1.0.0"
+fastLib.domain_mapping = "io.library.android:domain-mapping:1.0.1"
+fastLib.loading_retry = "io.library.android:loading-retry:1.0.9"
+fastLib.klog = "io.library.android:klog:1.0.0"
+fastLib.compress = "io.library.android:compress:1.0.2"
+fastLib.rx_download = "io.library.android:rx-download:1.0.3"
+fastLib.rx_permissions = "io.library.android:rx-permissions:1.0.2"
+fastLib.bridge_webview = "io.library.android:ds-webview:1.1.1"
+fastLib.swipe_back = "io.library.android:activity-swipe-back:1.0.3"
+fastLib.app_updater = "io.library.android:app-updater:1.0.6"
+fastLib.skeleton = "io.library.android:ui-skeleton:1.0.1"
+fastLib.qrScan = "io.library.android:qr-scan:1.0.0"
+fastLib.appBadger = "io.library.android:app-badger:1.0.0"
+fastLib.smartTitle = "io.library.android:smart-title:1.0.4"
+fastLib.stickyHeaderRecycler = "io.library.android:sticky-recycler-header:1.0.2"
+fastLib.elinkagescroll = "io.library.android:elinkagescroll:1.0.2"
+fastLib.banner = "io.library.android:recycler-banner:1.0.0"
+fastLib.rxweaver_ktx = "io.library.android:weaver-ktx:1.0.0"
+
+deps.fastLib = fastLib
+ext.deps = deps
+
+def build_versions = [:]
+build_versions.min_sdk = 19
+build_versions.target_sdk = 29
+build_versions.build_tools = "29.0.2"
+build_versions.compile_version = 29
+ext.build_versions = build_versions
+
+ext.deps = deps
+
+def addRepos(RepositoryHandler handler) {
+    handler.maven { url "https://maven.google.com" }
+    handler.google()
+    handler.jcenter()
+    handler.mavenCentral()
+    handler.maven { url 'https://jitpack.io' }
+    handler.maven { url 'https://dl.bintray.com/sfe2014/maven' }
+    handler.maven { url "http://mvn.mob.com/android" }
+}
+ext.addRepos = this.&addRepos

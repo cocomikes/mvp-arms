@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+     <!--base-config 打开所有HTTP明文数据请求-->
+    <base-config cleartextTrafficPermitted="true" />
+
+    <!--仅对特定域名打开HTTP-->
+    <!--<domain-config cleartextTrafficPermitted="true" >-->
+        <!--<domain includeSubdomains="true">xxxxx</domain>-->
+    <!--</domain-config>-->
+</network-security-config>

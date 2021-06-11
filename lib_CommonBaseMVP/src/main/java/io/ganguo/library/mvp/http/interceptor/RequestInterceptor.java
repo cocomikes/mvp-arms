@@ -1,0 +1,298 @@
+/*
+ * Copyright 2017 JessYan
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package io.ganguo.library.mvp.http.interceptor;
+
+import android.text.TextUtils;
+
+import io.ganguo.library.mvp.ui.mvp.GlobalHttpHandler;
+import io.ganguo.library.mvp.ui.mvp.di.module.GlobalConfigModule;
+import io.ganguo.library.mvp.util.UrlEncoderUtils;
+import io.ganguo.library.mvp.util.ZipHelper;
+import io.ganguo.library.klog.KLog;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.nio.charset.Charset;
+import java.util.Locale;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+import androidx.annotation.Nullable;
+import okhttp3.Interceptor;
+import okhttp3.MediaType;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
+import okio.Buffer;
+import okio.BufferedSource;
+
+
+/**
+ * ================================================
+ * 解析框架中的网络请求和响应结果,并以日志形式输出,调试神器
+ * 可使用 {@link GlobalConfigModule.Builder#printHttpLogLevel(Level)} 控制或关闭日志
+ * ================================================
+ */
+@Singleton
+public class RequestInterceptor implements Interceptor {
+    @Inject
+    @Nullable
+    GlobalHttpHandler mHandler;
+    Level printLevel;
+
+    public enum Level {
+        /**
+         * 不打印log
+         */
+        NONE,
+        /**
+         * 只打印请求信息
+         */
+        REQUEST,
+        /**
+         * 只打印响应信息
+         */
+        RESPONSE,
+        /**
+         * 所有数据全部打印
+         */
+        ALL
+    }
+
+    @Inject
+    public RequestInterceptor(Level printLevel) {
+        this.printLevel = printLevel;
+    }
+
+    @Override
+    public Response intercept(Chain chain) throws IOException {
+        Request originalRequest = chain.request()
+                .newBuilder()
+                .header("Connection", "Close")
+                .build();
+
+        boolean logRequest = printLevel == Level.ALL || (printLevel != Level.NONE && printLevel == Level.REQUEST);
+
+        if (logRequest) {
+            //打印请求信息
+            KLog.d("RequestInterceptor",String.format("Sending request %s on %s%n%s", originalRequest.url(), chain.connection(), originalRequest.headers()));
+        }
+
+        boolean logResponse = printLevel == Level.ALL || (printLevel != Level.NONE && printLevel == Level.RESPONSE);
+
+        long t1 = logResponse ? System.nanoTime() : 0;
+        Response originalResponse;
+        try {
+            originalResponse = chain.proceed(originalRequest);
+        } catch (Exception e) {
+            KLog.w("Http Error: " + e);
+            throw e;
+        }
+        long t2 = logResponse ? System.nanoTime() : 0;
+        if (logResponse) {
+            KLog.d("RequestInterceptor", String.format(Locale.getDefault(), "Received response for %s in %.1fms response code %s%n%s",
+                    originalResponse.request().url(), (t2 - t1) / 1e6d, originalResponse.code(), originalResponse.headers()));
+        }
+
+        ResponseBody responseBody = originalResponse.body();
+
+        //打印响应结果
+        String bodyString = null;
+        if (responseBody != null && isParseable(responseBody.contentType())) {
+            bodyString = printResult(originalRequest, originalResponse, logResponse);
+        }
+
+        if (logResponse) {
+            KLog.json("RequestInterceptor", bodyString);
+        }
+
+        if (mHandler != null)//这里可以比客户端提前一步拿到服务器返回的结果,可以做一些操作,比如token超时,重新获取
+            return mHandler.onHttpResultResponse(bodyString, chain, originalResponse);
+
+        return originalResponse;
+    }
+
+    /**
+     * 打印响应结果
+     *
+     * @param request     {@link Request}
+     * @param response    {@link Response}
+     * @param logResponse 是否打印响应结果
+     * @return 解析后的响应结果
+     * @throws IOException
+     */
+    @Nullable
+    private String printResult(Request request, Response response, boolean logResponse) throws IOException {
+        try {
+            //读取服务器返回的结果
+            ResponseBody responseBody = response.newBuilder().build().body();
+            BufferedSource source = responseBody.source();
+            source.request(Long.MAX_VALUE); // Buffer the entire body.
+            Buffer buffer = source.buffer();
+
+            //获取content的压缩类型
+            String encoding = response
+                    .headers()
+                    .get("Content-Encoding");
+
+            Buffer clone = buffer.clone();
+
+            //解析response content
+            return parseContent(responseBody, encoding, clone);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "{\"error\": \"" + e.getMessage() + "\"}";
+        }
+    }
+
+    /**
+     * 解析服务器响应的内容
+     *
+     * @param responseBody {@link ResponseBody}
+     * @param encoding     编码类型
+     * @param clone        克隆后的服务器响应内容
+     * @return 解析后的响应结果
+     */
+    private String parseContent(ResponseBody responseBody, String encoding, Buffer clone) {
+        Charset charset = Charset.forName("UTF-8");
+        MediaType contentType = responseBody.contentType();
+        if (contentType != null) {
+            charset = contentType.charset(charset);
+        }
+        if (encoding != null && encoding.equalsIgnoreCase("gzip")) {//content 使用 gzip 压缩
+            return ZipHelper.decompressForGzip(clone.readByteArray(), convertCharset(charset));//解压
+        } else if (encoding != null && encoding.equalsIgnoreCase("zlib")) {//content 使用 zlib 压缩
+            return ZipHelper.decompressToStringForZlib(clone.readByteArray(), convertCharset(charset));//解压
+        } else {//content 没有被压缩, 或者使用其他未知压缩方式
+            return clone.readString(charset);
+        }
+    }
+
+    /**
+     * 解析请求服务器的请求参数
+     *
+     * @param request {@link Request}
+     * @return 解析后的请求信息
+     * @throws UnsupportedEncodingException
+     */
+    public static String parseParams(Request request) throws UnsupportedEncodingException {
+        try {
+            RequestBody body = request.newBuilder().build().body();
+            if (body == null) return "";
+            Buffer requestbuffer = new Buffer();
+            body.writeTo(requestbuffer);
+            Charset charset = Charset.forName("UTF-8");
+            MediaType contentType = body.contentType();
+            if (contentType != null) {
+                charset = contentType.charset(charset);
+            }
+            String json = requestbuffer.readString(charset);
+            if (UrlEncoderUtils.hasUrlEncoded(json)) {
+                json = URLDecoder.decode(json, convertCharset(charset));
+            }
+            return jsonFormat(json);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "{\"error\": \"" + e.getMessage() + "\"}";
+        }
+    }
+
+    /**
+     * json 格式化
+     *
+     * @param json
+     * @return
+     */
+    private static String jsonFormat(String json) {
+        if (TextUtils.isEmpty(json)) {
+            return "Empty/Null json content";
+        }
+        String message;
+        try {
+            json = json.trim();
+            if (json.startsWith("{")) {
+                JSONObject jsonObject = new JSONObject(json);
+                message = jsonObject.toString(4);
+            } else if (json.startsWith("[")) {
+                JSONArray jsonArray = new JSONArray(json);
+                message = jsonArray.toString(4);
+            } else {
+                message = json;
+            }
+        } catch (JSONException e) {
+            message = json;
+        }
+        return message;
+    }
+
+    /**
+     * 是否可以解析
+     *
+     * @param mediaType {@link MediaType}
+     * @return {@code true} 为可以解析
+     */
+    public static boolean isParseable(MediaType mediaType) {
+        if (mediaType == null || mediaType.type() == null) return false;
+        return isText(mediaType) || isPlain(mediaType)
+                || isJson(mediaType) || isForm(mediaType)
+                || isHtml(mediaType) || isXml(mediaType);
+    }
+
+    public static boolean isText(MediaType mediaType) {
+        if (mediaType == null || mediaType.type() == null) return false;
+        return mediaType.type().equals("text");
+    }
+
+    public static boolean isPlain(MediaType mediaType) {
+        if (mediaType == null || mediaType.subtype() == null) return false;
+        return mediaType.subtype().toLowerCase().contains("plain");
+    }
+
+    public static boolean isJson(MediaType mediaType) {
+        if (mediaType == null || mediaType.subtype() == null) return false;
+        return mediaType.subtype().toLowerCase().contains("json");
+    }
+
+    public static boolean isXml(MediaType mediaType) {
+        if (mediaType == null || mediaType.subtype() == null) return false;
+        return mediaType.subtype().toLowerCase().contains("xml");
+    }
+
+    public static boolean isHtml(MediaType mediaType) {
+        if (mediaType == null || mediaType.subtype() == null) return false;
+        return mediaType.subtype().toLowerCase().contains("html");
+    }
+
+    public static boolean isForm(MediaType mediaType) {
+        if (mediaType == null || mediaType.subtype() == null) return false;
+        return mediaType.subtype().toLowerCase().contains("x-www-form-urlencoded");
+    }
+
+    public static String convertCharset(Charset charset) {
+        String s = charset.toString();
+        int i = s.indexOf("[");
+        if (i == -1)
+            return s;
+        return s.substring(i + 1, s.length() - 1);
+    }
+}

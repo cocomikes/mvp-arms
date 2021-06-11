@@ -1,0 +1,99 @@
+apply plugin: 'com.android.library'
+
+def versionMajor = 1
+def versionMinor = 2
+def versionPatch = 7
+
+android {
+    compileSdkVersion rootProject.ext.build_versions.compile_version
+    buildToolsVersion rootProject.ext.build_versions.build_tools
+
+    defaultConfig {
+        minSdkVersion rootProject.ext.build_versions.min_sdk
+        targetSdkVersion rootProject.ext.build_versions.target_sdk
+        versionCode versionMajor * 100 + versionMinor * 10 + versionPatch
+        versionName "${versionMajor}.${versionMinor}.${versionPatch}"
+        multiDexEnabled true
+
+        // 指明打包混淆规则
+        consumerProguardFiles 'proguard-rules.pro'
+
+        buildConfigField "String", "CBASE_LOG_TAG", '"cbase_$$"'
+        buildConfigField "String", "buildTime", "\"" + buildTime() + "\""
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                includeCompileClasspath true
+                arguments = [AROUTER_MODULE_NAME: project.getName()]
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    api project(':lib_KLog')
+
+    api 'androidx.appcompat:appcompat:1.1.0'
+    api 'androidx.annotation:annotation:1.1.0'
+    api 'androidx.recyclerview:recyclerview:1.1.0'
+    api 'androidx.constraintlayout:constraintlayout:1.1.3'
+
+    api rootProject.ext.deps.gson
+    //glide
+    api rootProject.ext.deps.glide.runtime
+    annotationProcessor rootProject.ext.deps.glide.compiler
+
+    api rootProject.ext.deps.okHttp
+    //rxjava2
+    api rootProject.ext.deps.rxjava2
+    api rootProject.ext.deps.rx_android
+
+    //retrofit
+    api rootProject.ext.deps.retrofit.runtime
+    api rootProject.ext.deps.retrofit.gson
+    api rootProject.ext.deps.retrofit.scalars
+    api rootProject.ext.deps.retrofit.rxjava2
+
+    //rx cache
+    api rootProject.ext.deps.rxCache.runtime
+    api rootProject.ext.deps.rxCache.gson
+
+    //toast
+    api (rootProject.ext.deps.dToast){
+        exclude group: 'com.android.support'
+    }
+    //aRouter
+    api rootProject.ext.deps.aRouter.runtime
+    annotationProcessor rootProject.ext.deps.aRouter.compiler
+
+    //auto dispose
+    api rootProject.ext.deps.autodispose.runtime
+    api rootProject.ext.deps.autodispose.archcomponents
+
+    //dagger2
+    api rootProject.ext.deps.dagger2.runtime
+    annotationProcessor rootProject.ext.deps.dagger2.compiler
+}
