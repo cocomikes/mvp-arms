@@ -54,7 +54,7 @@ tasks.withType(JavaCompile) {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    api project(':lib_KLog')
+    api project(':klog')
 
     api 'androidx.appcompat:appcompat:1.1.0'
     api 'androidx.annotation:annotation:1.1.0'

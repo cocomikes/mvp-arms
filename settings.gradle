@@ -1,4 +1,4 @@
 rootProject.name = "GitHubTools"
 include ':app'
-include ':lib_KLog'
-include ':lib_CommonBaseMVP'
+include ':klog'
+include ':common-mvp'

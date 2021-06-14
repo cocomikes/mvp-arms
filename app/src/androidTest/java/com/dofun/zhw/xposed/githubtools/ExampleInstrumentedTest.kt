@@ -1,12 +1,11 @@
 package com.dofun.zhw.xposed.githubtools
 
-import androidx.test.platform.app.InstrumentationRegistry
+import android.util.Log
 import androidx.test.ext.junit.runners.AndroidJUnit4
-
+import androidx.test.platform.app.InstrumentationRegistry
+import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith
-
-import org.junit.Assert.*
 
 /**
  * Instrumented test, which will execute on an Android device.
@@ -18,6 +17,7 @@ class ExampleInstrumentedTest {
     @Test
     fun useAppContext() {
         // Context of the app under test.
+        Log.e("power_gson", "", IllegalArgumentException("类型解析异常：" + "123" + "，后台返回的类型为：" + "222"))
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
         assertEquals("com.dofun.zhw.xposed.githubtools", appContext.packageName)
     }
