@@ -1,8 +1,8 @@
 ext.deps = [:]
 
 def versions = [:]
-versions.android_gradle_plugin = '3.5.4'
-versions.kotlin = '1.3.50'
+versions.android_gradle_plugin = '4.1.1'
+versions.kotlin = '1.4.21'
 versions.fabric = '1.31.0'
 versions.realm_version = '5.13.0'
 versions.google_play_service = '4.2.0'
@@ -302,43 +302,6 @@ def aRouter = [:]
 aRouter.runtime = "com.alibaba:arouter-api:$versions.aRouterRuntime"
 aRouter.compiler = "com.alibaba:arouter-compiler:$versions.aRouterCompiler"
 deps.aRouter = aRouter
-
-def fastLib = [:]
-fastLib.common_base_mvp = "io.library.android:common-base-mvp:1.2.3"
-
-fastLib.android_pay = "io.library.android:android-pay:2.1.0"
-fastLib.location_baidu = "io.library.android:location-baidu:2.0.0"
-fastLib.location_gaode = "io.library.android:location-baidu:2.0.0"
-fastLib.location_system = "io.library.android:location-system:2.0.0"
-
-fastLib.pull_to_refresh = "io.library.android:pull-to-refresh:3.0.1"
-fastLib.smart_rv_adapter = "io.library.android:smart-rv-adapter:3.1.8"
-fastLib.network_listen = "io.library.android:net-listen:3.0.5"
-fastLib.image_crop = "io.library.android:android-crop:3.0.4"
-fastLib.bottombar = "io.library.android:bottom-bar:3.1.1"
-fastLib.viewpager_indicator = "io.library.android:viewpager-indicator:3.0.0"
-fastLib.ui_sneaker = "io.library.android:ui-sneaker:3.0.6"
-fastLib.ui_slideuplayout = "io.library.android:ui-slideuplayout:1.0.0"
-fastLib.domain_mapping = "io.library.android:domain-mapping:1.0.1"
-fastLib.loading_retry = "io.library.android:loading-retry:1.0.9"
-fastLib.klog = "io.library.android:klog:1.0.0"
-fastLib.compress = "io.library.android:compress:1.0.2"
-fastLib.rx_download = "io.library.android:rx-download:1.0.3"
-fastLib.rx_permissions = "io.library.android:rx-permissions:1.0.2"
-fastLib.bridge_webview = "io.library.android:ds-webview:1.1.1"
-fastLib.swipe_back = "io.library.android:activity-swipe-back:1.0.3"
-fastLib.app_updater = "io.library.android:app-updater:1.0.6"
-fastLib.skeleton = "io.library.android:ui-skeleton:1.0.1"
-fastLib.qrScan = "io.library.android:qr-scan:1.0.0"
-fastLib.appBadger = "io.library.android:app-badger:1.0.0"
-fastLib.smartTitle = "io.library.android:smart-title:1.0.4"
-fastLib.stickyHeaderRecycler = "io.library.android:sticky-recycler-header:1.0.2"
-fastLib.elinkagescroll = "io.library.android:elinkagescroll:1.0.2"
-fastLib.banner = "io.library.android:recycler-banner:1.0.0"
-fastLib.rxweaver_ktx = "io.library.android:weaver-ktx:1.0.0"
-
-deps.fastLib = fastLib
-ext.deps = deps
 
 def build_versions = [:]
 build_versions.min_sdk = 19
