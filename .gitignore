@@ -44,3 +44,5 @@ build/
 *.swp
 
 bintray_user.properties
+mavenCentral.properties
+mavenCentral-upload.gradle

@@ -1,8 +1,8 @@
 apply plugin: 'com.android.library'
 
-def versionMajor = 1
-def versionMinor = 2
-def versionPatch = 7
+def versionMajor = 3
+def versionMinor = 0
+def versionPatch = 1
 
 android {
     compileSdkVersion rootProject.ext.build_versions.compile_version
@@ -97,3 +97,9 @@ dependencies {
     api rootProject.ext.deps.dagger2.runtime
     annotationProcessor rootProject.ext.deps.dagger2.compiler
 }
+
+ext {
+    ARTIFACT_ID = 'common-mvp' //项目名称
+    PUBLISH_VERSION = android.defaultConfig.versionName//版本号
+}
+//apply from: "../mavenCentral-upload.gradle"
