@@ -39,6 +39,11 @@ public class ARouterLog implements ILogger {
     }
 
     @Override
+    public void error(String tag, String message, Throwable e) {
+        KLog.e(getDefaultTag(), message);
+    }
+
+    @Override
     public void monitor(String message) {
         KLog.i(getDefaultTag(),message);
     }

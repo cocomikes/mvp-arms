@@ -313,12 +313,10 @@ ext.build_versions = build_versions
 ext.deps = deps
 
 def addRepos(RepositoryHandler handler) {
-    handler.maven { url "https://maven.google.com" }
-    handler.google()
-    handler.jcenter()
+    handler.maven { url 'https://maven.aliyun.com/repository/google' }
+    handler.maven { url 'https://maven.aliyun.com/repository/public' }
+    handler.maven { url 'https://maven.aliyun.com/repository/gradle-plugin' }
     handler.mavenCentral()
     handler.maven { url 'https://jitpack.io' }
-    handler.maven { url 'https://dl.bintray.com/sfe2014/maven' }
-    handler.maven { url "http://mvn.mob.com/android" }
 }
 ext.addRepos = this.&addRepos
